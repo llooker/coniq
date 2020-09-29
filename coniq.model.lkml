@@ -21,7 +21,8 @@ include: "/**/*.view.lkml"                # include all views in the views/ fold
 
 explore: transaction_present {
   view_label: "Transactions"
-  sql_always_where: date_redeemed > unix_timestamp(date(now() - interval 6 day)) ;;
+  always_filter: {filters:[transaction_present.redeemed_date: "7 days"]}
+#   sql_always_where: date_redeemed > unix_timestamp(date(now() - interval 6 day)) ;;
 
   join: auth_group {
     view_label: "Accounts"

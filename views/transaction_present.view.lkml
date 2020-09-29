@@ -66,7 +66,8 @@ view: transaction_present {
 
   dimension_group: redeemed {
     type: time
-    sql: from_unixtime(${date_redeemed}) ;;
+    sql: ${date_redeemed} ;;
+ datatype: epoch
 
   }
 
