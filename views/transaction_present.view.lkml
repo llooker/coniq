@@ -143,25 +143,7 @@ view: transaction_present {
     sql: ${TABLE}.id_transaction_present ;;
   }
 
-  dimension: imei {
-    type: string
-    sql: ${TABLE}.imei ;;
-  }
 
-  dimension: linked_payment_method_id {
-    type: number
-    sql: ${TABLE}.linked_payment_method_id ;;
-  }
-
-  dimension: location_address {
-    type: string
-    sql: ${TABLE}.location_address ;;
-  }
-
-  dimension: manual_entry_enc {
-    type: string
-    sql: ${TABLE}.manual_entry_enc ;;
-  }
 
   dimension: price {
     type: number
@@ -188,21 +170,6 @@ view: transaction_present {
     sql: ${TABLE}.total ;;
   }
 
-  dimension: transaction_values {
-    type: string
-    sql: ${TABLE}.transaction_values ;;
-  }
-
-  dimension: type_trans {
-    type: yesno
-    sql: ${TABLE}.type_trans ;;
-  }
-
-  dimension: unique_id {
-    type: string
-    sql: ${TABLE}.unique_id ;;
-  }
-
   dimension_group: verified {
     type: time
     timeframes: [
@@ -215,11 +182,6 @@ view: transaction_present {
       year
     ]
     sql: ${TABLE}.verified_on ;;
-  }
-
-  dimension: via {
-    type: string
-    sql: ${TABLE}.via ;;
   }
 
   dimension: is_revenue {
@@ -262,10 +224,15 @@ view: transaction_present {
   }
 
 
-
-
   measure: total_non_zero_transactions{
     type: count
     filters: [is_revenue: "Yes"]
   }
+
+  measure: average_Transaction_value {
+    type:  average
+    sql: ${price} ;;
+    filters: [is_revenue: "Yes"]
+  }
+
 }
