@@ -23,20 +23,12 @@ view: signup {
     sql: ${TABLE}.channel_id ;;
   }
 
-  dimension: customer_data {
-    type: string
-    sql: ${TABLE}.customer_data ;;
-  }
 
   dimension: customer_id {
     type: number
     sql: ${TABLE}.customer_id ;;
   }
 
-  dimension: is_replacement {
-    type: yesno
-    sql: ${TABLE}.is_replacement ;;
-  }
 
   dimension: privacy_agreement {
     type: yesno

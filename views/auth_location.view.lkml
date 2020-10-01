@@ -43,7 +43,7 @@ view: auth_location {
 
 
   dimension: post_code {
-    type: string
+    type: zipcode
     sql: ${TABLE}.post_code ;;
   }
 

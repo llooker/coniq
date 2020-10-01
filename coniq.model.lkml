@@ -26,10 +26,6 @@ explore: transaction_present {
   access_filter: {field:transaction_present.id_auth_group
     user_attribute:account}
 
-
-#   sql_always_where: date_redeemed > unix_timestamp(date(now() - interval 6 day)) ;;
-
-
   join: auth_group {
     view_label: "Accounts"
     relationship: many_to_one
@@ -67,4 +63,31 @@ explore: transaction_present {
 explore: consumer {
   view_label: "Customers"
   sql_always_where: ${customer_discriminator}='active' ;;
+
+  join: auth_group {
+    view_label: "Accounts"
+    relationship: many_to_one
+    sql_on: ${consumer.id_auth_group} = ${auth_group.id_auth_group} ;;
+  }
+
+  join: signup {
+    view_label: "Signup Event"
+    relationship: many_to_many
+    sql_on: ${consumer.id_consumer}=${signup.customer_id} ;;
+  }
+
+  join: signup_definition {
+    view_label: "Signup Form"
+    relationship: many_to_one
+    sql_on: ${signup.signup_definition_id} = ${signup.id} ;;
+  }
+  join: location_group {
+    view_label: "Preferred location"
+    relationship: one_to_many
+    sql_on:  ${consumer.preferred_location_group_id} = ${location_group.id} ;;
+
+
+  }
+
+
 }

@@ -6,7 +6,17 @@ view: consumer {
 
   dimension_group: created_on {
     type: time
+    timeframes: [
+       raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
     sql: ${TABLE}.created_on ;;
+    datatype: epoch
+
   }
 
   dimension: customer_data {
@@ -35,6 +45,12 @@ view: consumer {
     sql: ${TABLE}.date_of_birth ;;
   }
 
+  dimension: age {
+    type:  duration_year
+    sql_start: ${date_of_birth_year} ;;
+    sql_end: current_timestamp() ;;
+  }
+
   dimension: deleted_on {
     type: number
     sql: ${TABLE}.deleted_on ;;
@@ -56,6 +72,7 @@ view: consumer {
   }
 
   dimension: id_consumer {
+    primary_key: yes
     type: number
     sql: ${TABLE}.id_consumer ;;
   }
@@ -66,7 +83,7 @@ view: consumer {
   }
 
   dimension: postcode {
-    type: string
+    type: zipcode
     sql: ${TABLE}.postcode ;;
   }
 
@@ -90,30 +107,9 @@ view: consumer {
     sql: ${TABLE}.updated_on ;;
   }
 
-  dimension: var1 {
-    type: string
-    sql: ${TABLE}.var1 ;;
-  }
 
-  dimension: var2 {
-    type: string
-    sql: ${TABLE}.var2 ;;
+  measure: count {
+    type: count
   }
-
-  dimension: var3 {
-    type: string
-    sql: ${TABLE}.var3 ;;
-  }
-
-  dimension: var4 {
-    type: string
-    sql: ${TABLE}.var4 ;;
-  }
-
-  dimension: var5 {
-    type: string
-    sql: ${TABLE}.var5 ;;
-  }
-
 
 }
