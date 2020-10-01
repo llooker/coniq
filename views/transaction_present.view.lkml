@@ -67,7 +67,8 @@ view: transaction_present {
   dimension_group: redeemed {
     type: time
     sql: ${date_redeemed} ;;
-    datatype: epoch
+ datatype: epoch
+
 
   }
 
