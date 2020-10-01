@@ -67,7 +67,6 @@ view: transaction_present {
     ]
     sql: ${TABLE}.date_recorded ;;
     datatype: epoch
-
   }
 
   dimension_group: date_redeemed {
