@@ -23,6 +23,9 @@ explore: transaction_present {
   view_label: "Transactions"
   sql_always_where: ${test} =0 and ${duplicate} = 0;;
   always_filter: {filters: [transaction_present.date_redeemed_date:"7 days"]}
+  access_filter: {field:transaction_present.id_auth_group
+    user_attribute:account}
+
 
 #   sql_always_where: date_redeemed > unix_timestamp(date(now() - interval 6 day)) ;;
 
