@@ -29,25 +29,35 @@ explore: transaction_present {
     sql_on: ${transaction_present.id_auth_group}=${auth_group.id_auth_group} ;;
   }
 
+
   join: auth_location {
+    view_label: "Locations"
     relationship: many_to_one
     sql_on: ${transaction_present.id_auth_location}=${auth_location.id_auth_location} ;;
 
   }
 
   join: location_group_location {
+    view_label: "Location to location_group"
     relationship: many_to_many
     sql_on: ${transaction_present.id_auth_location}=${location_group_location.id_auth_location} ;;
   }
 
   join: location_group {
+    view_label: "Location Group"
     relationship: many_to_many
     sql_on: ${location_group_location.location_group_id}=${location_group.id} and ${location_group.type}='user';;
   }
 
   join: visit_facts_dt {
+    view_label: "Visits"
     relationship: many_to_one
     sql_on: ${transaction_present.visit}=${visit_facts_dt.visit} ;;
   }
 
+}
+
+explore: consumer {
+  view_label: "Customers"
+  sql_always_where: ${customer_discriminator}='active' ;;
 }

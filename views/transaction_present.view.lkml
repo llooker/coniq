@@ -54,21 +54,38 @@ view: transaction_present {
     sql: ${TABLE}.date_handset ;;
   }
 
-  dimension: date_recorded {
-    type: number
-    sql: ${TABLE}.date_recorded ;;
-  }
-
-  dimension: date_redeemed {
-    type: number
-    sql: ${TABLE}.date_redeemed ;;
-  }
-
-  dimension_group: redeemed {
+  dimension_group: date_recorded {
     type: time
-    sql: from_unixtime(${date_redeemed}) ;;
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql: ${TABLE}.date_recorded ;;
+    datatype: epoch
 
   }
+
+  dimension_group: date_redeemed {
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql: ${TABLE}.date_redeemed ;;
+    datatype:  epoch
+
+  }
+
 
   dimension_group: date_scanned {
     type: time
@@ -229,7 +246,7 @@ view: transaction_present {
 
   dimension: visit {
     type: string
-    sql: case when ${is_known_customer} is true then concat(${id_consumer},${redeemed_date}) else null end ;;
+    sql: case when ${is_known_customer} is true then concat(${id_consumer},${date_redeemed_date}) else null end ;;
   }
 
   measure: total_visits {
