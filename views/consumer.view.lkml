@@ -51,9 +51,11 @@ view: consumer {
     sql_end: current_timestamp() ;;
   }
 
-  dimension: deleted_on {
-    type: number
-    sql: ${TABLE}.deleted_on ;;
+  dimension: age_tier {
+    type: tier
+    tiers: [0,10,20,30,40,50,60,70,80]
+    style: integer
+    sql: ${age} ;;
   }
 
   dimension: deliverable {
