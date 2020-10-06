@@ -58,6 +58,12 @@ explore: transaction_present {
     sql_on: ${transaction_present.visit}=${visit_facts_dt.visit} ;;
   }
 
+  join: customer_dt {
+    view_label: "Customer"
+    relationship: many_to_one
+    sql_on: ${transaction_present.id_consumer}=${customer_dt.id_consumer} ;;
+    }
+
 }
 
 explore: consumer {
