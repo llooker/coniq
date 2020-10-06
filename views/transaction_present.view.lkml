@@ -234,4 +234,9 @@ view: transaction_present {
     filters: [is_revenue: "Yes"]
   }
 
+  measure: count_distinct_customers {
+    type: count_distinct
+    sql:${id_consumer} ;;
+    filters: [is_known_customer: "Yes"]
+  }
 }

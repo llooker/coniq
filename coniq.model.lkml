@@ -69,6 +69,8 @@ explore: transaction_present {
 explore: consumer {
   view_label: "Customers"
   sql_always_where: ${customer_discriminator}='active' ;;
+  access_filter: {field:consumer.id_auth_group
+    user_attribute:account}
 
   join: auth_group {
     view_label: "Accounts"
