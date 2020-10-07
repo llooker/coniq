@@ -65,13 +65,24 @@ explore: transaction_present {
     }
 
   join: oma_data{
-    relationship: one_to_many
+    relationship: many_to_many
     sql_on: ${auth_location.external_id} = ${oma_data.external_id} and ${auth_location.account_id} = ${oma_data.account_id} and ${oma_data.sale_date_date} = ${transaction_present.date_redeemed_date} ;;
   }
 }
 
 explore: oma_data {
   view_label: "OMA data"
+  join : auth_location{
+    view_label: "Coniq locations"
+    relationship: many_to_one
+    sql_on: ${auth_location.external_id} = ${oma_data.external_id} and ${auth_location.account_id} = ${oma_data.account_id} ;;
+  }
+  join: transaction_present {
+    view_label: "Coniq transactions"
+    relationship: many_to_many
+    sql_on:${auth_location.id_auth_location} = ${transaction_present.id_auth_location} and ${oma_data.sale_date_date} = ${transaction_present.date_redeemed_date} ;;
+  }
+
 }
 
 explore: consumer {
