@@ -68,7 +68,6 @@ explore: transaction_present {
     relationship: one_to_many
     sql_on: ${auth_location.external_id} = ${oma_data.external_id} and ${auth_location.account_id} = ${oma_data.account_id} and ${oma_data.sale_date_date} = ${transaction_present.date_redeemed_date} ;;
   }
-
 }
 
 explore: oma_data {
