@@ -1,10 +1,11 @@
 view: visit_facts_dt {
   derived_table: {
-    sql_trigger_value: date(now() ;;
+    sql_trigger_value: date(now()) ;;
     sql: SELECT
         concat(transaction_present.id_consumer,(DATE(from_unixtime(transaction_present.date_redeemed) )))   AS visit_id,
         id_consumer,
         DATE(from_unixtime(transaction_present.date_redeemed)) as visit_date,
+        id_auth_group,
         COUNT(*) AS `transaction_present.count`,
         COALESCE(SUM(CASE WHEN transaction_present.price>0  THEN transaction_present.price  ELSE NULL END), 0) AS `transaction_present.total_price`
       FROM iris.TRANSACTION_present  AS transaction_present
@@ -23,6 +24,11 @@ view: visit_facts_dt {
     primary_key: yes
     type: string
     sql: ${TABLE}.visit_id ;;
+  }
+
+  dimension: account_id {
+    type:  number
+    sql:  ${TABLE}.id_auth_group ;;
   }
 
   dimension: customer_id {

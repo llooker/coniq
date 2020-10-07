@@ -121,6 +121,8 @@ explore: consumer {
 
 explore: visit_facts_dt {
   view_label: "Visits"
+  access_filter: {field:visit_facts_dt.account_id
+    user_attribute:account}
 
   join : transaction_present {
     view_label: "Transactions"
