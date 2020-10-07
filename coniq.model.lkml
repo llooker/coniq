@@ -81,7 +81,7 @@ explore: consumer {
   join: signup_definition {
     view_label: "Signup Form"
     relationship: many_to_one
-    sql_on: ${signup.signup_definition_id} = ${signup.id} ;;
+    sql_on: ${signup.signup_definition_id} = ${signup_definition.id} ;;
   }
   join: location_group {
     view_label: "Preferred location"
