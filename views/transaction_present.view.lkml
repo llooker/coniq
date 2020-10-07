@@ -85,10 +85,6 @@ view: transaction_present {
     sql: ${TABLE}.id_auth_location ;;
   }
 
-  dimension: id_barcode {
-    type: number
-    sql: ${TABLE}.id_barcode ;;
-  }
 
   dimension: id_consumer {
     type: number
@@ -161,14 +157,14 @@ view: transaction_present {
     sql: ${id_consumer}>0 and ${id_consumer}<>56796119 ;;
   }
 
-  dimension: visit {
+  dimension: visit_id {
     type: string
     sql: case when ${is_known_customer} is true then concat(${id_consumer},${date_redeemed_date}) else null end ;;
   }
 
   measure: total_visits {
     type: count_distinct
-    sql: ${visit} ;;
+    sql: ${visit_id} ;;
     drill_fields: [is_known_customer,id_auth_location,price,auth_location.name,location_group.name]
     filters: [is_known_customer: "Yes"]
   }

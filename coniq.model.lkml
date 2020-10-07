@@ -55,7 +55,7 @@ explore: transaction_present {
   join: visit_facts_dt {
     view_label: "Visits"
     relationship: many_to_one
-    sql_on: ${transaction_present.visit}=${visit_facts_dt.visit} ;;
+    sql_on: ${transaction_present.visit_id}=${visit_facts_dt.visit_id} ;;
   }
 
   join: customer_dt {
@@ -116,5 +116,22 @@ explore: consumer {
 
   }
 
+
+}
+
+explore: visit_facts_dt {
+  view_label: "Visits"
+
+  join : transaction_present {
+    view_label: "Transactions"
+    relationship: one_to_many
+    sql_on: ${transaction_present.visit_id}= ${visit_facts_dt.visit_id} ;;
+  }
+
+  join: consumer {
+    view_label: "Customers"
+    relationship: many_to_one
+    sql_on: ${visit_facts_dt.customer_id} = ${consumer.id_consumer} ;;
+  }
 
 }
