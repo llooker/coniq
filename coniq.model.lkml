@@ -21,8 +21,8 @@ include: "/**/*.view.lkml"                # include all views in the views/ fold
 
 explore: transaction_present {
   view_label: "Transactions"
-  sql_always_where: ${test} =0 and ${duplicate} = 0;;
-  always_filter: {filters: [transaction_present.date_redeemed_date:"20 days"]}
+  sql_always_where: ${test} =0 and ${duplicate} = 0 and ${id_auth_group}=76733 ;;
+  always_filter: {filters: [transaction_present.date_redeemed_date:"365 days"]}
   access_filter: {field:transaction_present.id_auth_group
     user_attribute:account}
 
@@ -55,7 +55,7 @@ explore: transaction_present {
   join: visit_facts_dt {
     view_label: "Visits"
     relationship: many_to_one
-    sql_on: ${transaction_present.visit}=${visit_facts_dt.visit} ;;
+    sql_on: ${transaction_present.visit_id}=${visit_facts_dt.visit_id} ;;
   }
 
   join: customer_dt {
@@ -63,6 +63,25 @@ explore: transaction_present {
     relationship: many_to_one
     sql_on: ${transaction_present.id_consumer}=${customer_dt.id_consumer} ;;
     }
+
+  join: oma_data{
+    relationship: many_to_many
+    sql_on: ${auth_location.external_id} = ${oma_data.external_id} and ${auth_location.account_id} = ${oma_data.account_id} and ${oma_data.sale_date_date} = ${transaction_present.date_redeemed_date} ;;
+  }
+}
+
+explore: oma_data {
+  view_label: "OMA data"
+  join : auth_location{
+    view_label: "Coniq locations"
+    relationship: many_to_one
+    sql_on: ${auth_location.external_id} = ${oma_data.external_id} and ${auth_location.account_id} = ${oma_data.account_id} ;;
+  }
+  join: transaction_present {
+    view_label: "Coniq transactions"
+    relationship: many_to_many
+    sql_on:${auth_location.id_auth_location} = ${transaction_present.id_auth_location} and ${oma_data.sale_date_date} = ${transaction_present.date_redeemed_date} ;;
+  }
 
 }
 
@@ -87,7 +106,7 @@ explore: consumer {
   join: signup_definition {
     view_label: "Signup Form"
     relationship: many_to_one
-    sql_on: ${signup.signup_definition_id} = ${signup.id} ;;
+    sql_on: ${signup.signup_definition_id} = ${signup_definition.id} ;;
   }
   join: location_group {
     view_label: "Preferred location"
@@ -97,5 +116,24 @@ explore: consumer {
 
   }
 
+
+}
+
+explore: visit_facts_dt {
+  view_label: "Visits"
+  access_filter: {field:visit_facts_dt.account_id
+    user_attribute:account}
+
+  join : transaction_present {
+    view_label: "Transactions"
+    relationship: one_to_many
+    sql_on: ${transaction_present.visit_id}= ${visit_facts_dt.visit_id} ;;
+  }
+
+  join: consumer {
+    view_label: "Customers"
+    relationship: many_to_one
+    sql_on: ${visit_facts_dt.customer_id} = ${consumer.id_consumer} ;;
+  }
 
 }

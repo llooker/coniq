@@ -74,7 +74,7 @@ view: signup {
     drill_fields: [id]
   }
 
-  measure: count_custoers {
+  measure: count_customers {
     type: count_distinct
     sql: ${customer_id} ;;
   }
