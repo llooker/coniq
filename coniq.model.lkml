@@ -21,8 +21,8 @@ include: "/**/*.view.lkml"                # include all views in the views/ fold
 
 explore: transaction_present {
   view_label: "Transactions"
-  sql_always_where: ${test} =0 and ${duplicate} = 0;;
-  always_filter: {filters: [transaction_present.date_redeemed_date:"20 days"]}
+  sql_always_where: ${test} =0 and ${duplicate} = 0 and ${id_auth_group}=76733 ;;
+  always_filter: {filters: [transaction_present.date_redeemed_date:"365 days"]}
   access_filter: {field:transaction_present.id_auth_group
     user_attribute:account}
 
@@ -64,6 +64,14 @@ explore: transaction_present {
     sql_on: ${transaction_present.id_consumer}=${customer_dt.id_consumer} ;;
     }
 
+  join: oma_data{
+    relationship: one_to_many
+    sql_on: ${auth_location.external_id} = ${oma_data.external_id} and ${auth_location.account_id} = ${oma_data.account_id} and ${oma_data.sale_date_date} = ${transaction_present.date_redeemed_date} ;;
+  }
+}
+
+explore: oma_data {
+  view_label: "OMA data"
 }
 
 explore: consumer {
@@ -87,7 +95,7 @@ explore: consumer {
   join: signup_definition {
     view_label: "Signup Form"
     relationship: many_to_one
-    sql_on: ${signup.signup_definition_id} = ${signup.id} ;;
+    sql_on: ${signup.signup_definition_id} = ${signup_definition.id} ;;
   }
   join: location_group {
     view_label: "Preferred location"

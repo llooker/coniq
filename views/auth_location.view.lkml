@@ -47,6 +47,12 @@ view: auth_location {
     sql: ${TABLE}.post_code ;;
   }
 
+  dimension: external_id {
+    type: number
+    sql: ${TABLE}.external_id ;;
+  }
+
+
   dimension: prefix {
     type: string
     sql: ${TABLE}.prefix ;;

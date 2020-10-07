@@ -1,25 +1,14 @@
 view: transaction_present {
   sql_table_name: iris.TRANSACTION_present ;;
 
-  dimension: by_handset {
-    type: yesno
-    sql: ${TABLE}.by_handset ;;
-  }
 
   dimension: channel {
     type: string
     sql: ${TABLE}.channel ;;
   }
 
-  dimension: commission {
-    type: number
-    sql: ${TABLE}.commission ;;
-  }
 
-  dimension: consumer_name {
-    type: string
-    sql: ${TABLE}.consumer_name ;;
-  }
+
 
   dimension: current_status {
     type: string
@@ -40,19 +29,7 @@ view: transaction_present {
     sql: ${TABLE}.current_status_on ;;
   }
 
-  dimension_group: date_handset {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}.date_handset ;;
-  }
+
 
   dimension_group: date_recorded {
     type: time
@@ -86,19 +63,6 @@ view: transaction_present {
   }
 
 
-  dimension_group: date_scanned {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}.date_scanned ;;
-  }
 
   dimension: duplicate {
     type: string
@@ -149,10 +113,6 @@ view: transaction_present {
     sql: ${TABLE}.price ;;
   }
 
-  dimension: price_source {
-    type: string
-    sql: ${TABLE}.price_source ;;
-  }
 
   dimension: refund_amount {
     type: number
@@ -164,10 +124,6 @@ view: transaction_present {
     sql: ${TABLE}.test ;;
   }
 
-  dimension: total {
-    type: number
-    sql: ${TABLE}.total ;;
-  }
 
   dimension_group: verified {
     type: time
@@ -197,7 +153,7 @@ view: transaction_present {
   measure: count {
     label: "Transaction count"
     type: count
-    drill_fields: [consumer_name,price,channel,id_auth_location]
+    drill_fields: [price,channel,id_auth_location]
   }
 
   dimension: is_known_customer {
@@ -213,7 +169,7 @@ view: transaction_present {
   measure: total_visits {
     type: count_distinct
     sql: ${visit} ;;
-    drill_fields: [is_known_customer,date_handset_time,id_auth_location,price,auth_location.name,location_group.name]
+    drill_fields: [is_known_customer,id_auth_location,price,auth_location.name,location_group.name]
     filters: [is_known_customer: "Yes"]
   }
 
