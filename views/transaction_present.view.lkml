@@ -213,6 +213,7 @@ view: transaction_present {
   measure: total_visits {
     type: count_distinct
     sql: ${visit} ;;
+    drill_fields: [is_known_customer,date_handset_time,id_auth_location,price,auth_location.name,location_group.name]
     filters: [is_known_customer: "Yes"]
   }
 
@@ -228,9 +229,15 @@ view: transaction_present {
     filters: [is_revenue: "Yes"]
   }
 
+  measure: transaction_ratio {
+    type: number
+    sql: 1.0*${total_non_zero_transactions}/nullif(${count},0) ;;
+  }
+
   measure: average_Transaction_value {
     type:  average
     sql: ${price} ;;
+    value_format_name: eur
     filters: [is_revenue: "Yes"]
   }
 

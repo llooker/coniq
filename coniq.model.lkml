@@ -22,7 +22,7 @@ include: "/**/*.view.lkml"                # include all views in the views/ fold
 explore: transaction_present {
   view_label: "Transactions"
   sql_always_where: ${test} =0 and ${duplicate} = 0;;
-  always_filter: {filters: [transaction_present.date_redeemed_date:"7 days"]}
+  always_filter: {filters: [transaction_present.date_redeemed_date:"20 days"]}
   access_filter: {field:transaction_present.id_auth_group
     user_attribute:account}
 

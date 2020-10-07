@@ -59,6 +59,7 @@ view: consumer {
   }
 
   dimension: deliverable {
+    description: "this is the name of the product where the cusotmer paid for"
     type: string
     sql: ${TABLE}.deliverable ;;
   }
