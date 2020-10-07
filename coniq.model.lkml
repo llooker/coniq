@@ -22,7 +22,7 @@ include: "/**/*.view.lkml"                # include all views in the views/ fold
 explore: transaction_present {
   view_label: "Transactions"
   sql_always_where: ${test} =0 and ${duplicate} = 0 and ${id_auth_group}=76733 ;;
-  always_filter: {filters: [transaction_present.date_redeemed_date:"7 days"]}
+  always_filter: {filters: [transaction_present.date_redeemed_date:"20 days"]}
   access_filter: {field:transaction_present.id_auth_group
     user_attribute:account}
 
@@ -57,6 +57,12 @@ explore: transaction_present {
     relationship: many_to_one
     sql_on: ${transaction_present.visit}=${visit_facts_dt.visit} ;;
   }
+
+  join: customer_dt {
+    view_label: "Customer"
+    relationship: many_to_one
+    sql_on: ${transaction_present.id_consumer}=${customer_dt.id_consumer} ;;
+    }
 
 }
 
