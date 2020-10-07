@@ -3,6 +3,7 @@ view: visit_facts_dt {
     sql_trigger_value: date(now() ;;
     sql: SELECT
         concat(transaction_present.id_consumer,(DATE(from_unixtime(transaction_present.date_redeemed) )))   AS visit,
+        count(distinct concat(tp.id_consumer,(DATE(from_unixtime(tp.date_redeemed) )))) as frequency,
         COUNT(*) AS `transaction_present.count`,
         COALESCE(SUM(CASE WHEN transaction_present.price>0  THEN transaction_present.price  ELSE NULL END), 0) AS `transaction_present.total_price`
       FROM iris.TRANSACTION_present  AS transaction_present
@@ -31,6 +32,11 @@ view: visit_facts_dt {
   dimension: spend_per_visit{
     type: number
     sql: ${TABLE}.`transaction_present.total_price` ;;
+  }
+
+  dimension: frequency{
+    type: number
+    sql: ${TABLE}.`transaction_present.frequency` ;;
   }
 
   measure: average_transaction_per_visit {
