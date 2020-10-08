@@ -162,6 +162,13 @@ view: transaction_present {
     sql: case when ${is_known_customer} is true then concat(${id_consumer},${date_redeemed_date}) else null end ;;
   }
 
+  dimension: frequency_bin {
+    type: tier
+    style: integer
+    tiers: [0,1,2,3,5,10]
+    sql: ${visit_id} ;;
+  }
+
   measure: total_visits {
     type: count_distinct
     sql: ${visit_id} ;;
