@@ -1,6 +1,6 @@
 view: visit_facts_dt {
   derived_table: {
-    sql_trigger_value: date(now()) ;;
+    datagroup_trigger: coniq_pdt
     sql: SELECT
         concat(transaction_present.id_consumer,(DATE(from_unixtime(transaction_present.date_redeemed) )))   AS visit_id,
         id_consumer,

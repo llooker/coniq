@@ -1,6 +1,6 @@
-view: customer_dt {
+view: customer_activity_dt {
   derived_table: {
-    sql_trigger_value: date(now() ;;
+    datagroup_trigger: coniq_pdt
     sql: SELECT
         transaction_present.id_consumer  AS id_consumer,
         COUNT(DISTINCT CASE WHEN transaction_present.id_consumer>0 and transaction_present.id_consumer<>56796119  THEN (case when (transaction_present.id_consumer>0 and transaction_present.id_consumer<>56796119) is true then concat(transaction_present.id_consumer,(DATE(FROM_UNIXTIME(transaction_present.date_redeemed )))) else null end)  ELSE NULL END) AS `transaction_present.total_visits`,
