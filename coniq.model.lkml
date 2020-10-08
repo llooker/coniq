@@ -28,7 +28,7 @@ datagroup: coniq_pdt {
 
 explore: transaction_present {
   view_label: "Transactions"
-  sql_always_where: ${test} =0 and ${duplicate} = 0 and ${id_auth_group}=76733 ;;
+  sql_always_where: ${test} =0 and ${duplicate} = 0 ;;
   always_filter: {filters: [transaction_present.date_redeemed_date:"365 days"]}
   access_filter: {field:transaction_present.id_auth_group
     user_attribute:account}
@@ -65,10 +65,10 @@ explore: transaction_present {
     sql_on: ${transaction_present.visit_id}=${visit_facts_dt.visit_id} ;;
   }
 
-  join: customer_activity_dt {
-    view_label: "Customer"
+  join: consumer {
+    view_label: "Customer "
     relationship: many_to_one
-    sql_on: ${transaction_present.id_consumer}=${customer_activity_dt.id_consumer} ;;
+    sql_on: ${transaction_present.id_consumer}=${consumer.id_consumer} ;;
     }
 
   join: oma_data{
