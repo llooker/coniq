@@ -115,7 +115,11 @@ explore: consumer {
 
 
   }
-
+  join: customer_dt
+  {view_label:"customer_activity"
+    relationship: one_to_one
+    sql_on: ${consumer.id_consumer}=${customer_dt.id_consumer};;
+    }
 
 }
 
