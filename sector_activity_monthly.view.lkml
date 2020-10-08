@@ -3,7 +3,7 @@ view: sector_activity_monthly {
     datagroup_trigger: coniq_pdt
     sql:  SELECT
   location_group.id as sector_id,
-  location_group.label,
+  location_group.label as sector_label,
   date_format(from_unixtime(transaction_present.date_redeemed), '%Y-%m-01')  AS `month_starting`,
   count(id_transaction_present) as all_transactions,
   sum(price) as price
@@ -14,17 +14,17 @@ LEFT JOIN iris.location_group  AS location_group ON location_group_location.loca
 WHERE (location_group.location_group_type_id  = 2)
 AND (transaction_present.test =0 and transaction_present.duplicate = 0 ) AND (NOT (transaction_present.id_auth_group  IS NULL)) and price>0
 GROUP BY 1,2,3 ;;
-  indexes: ["id"]
+  indexes: ["sector_id"]
   }
 
   dimension: location_group_id {
     type: number
-    sql: ${location_group.id} ;;
+    sql: ${TABLE}.sector_id ;;
   }
 
   dimension: location_group_name {
     type: string
-    sql: ${location_group.label} ;;
+    sql: ${TABLE}.sector_label ;;
   }
 
   dimension_group: month {
