@@ -5,7 +5,7 @@ view: location_group_dt {
         location_group.account_id  AS `account_id`,
         location_group.config  AS `config`,
         location_group.created_on  AS `created_on`,
-        location_group.id  AS `group.id`,
+        location_group.id  AS `id`,
         location_group.label  AS `label`,
         location_group.location_group_discriminator  AS `location_group_discriminator`,
         location_group.location_group_key  AS `location_group_key`,
@@ -43,9 +43,9 @@ view: location_group_dt {
     sql: ${TABLE}.created_on ;;
   }
 
-  dimension: group_id {
+  dimension: id {
     type: number
-    sql: ${TABLE}.`group.id` ;;
+    sql: ${TABLE}.`id` ;;
   }
 
   dimension: label {
@@ -93,7 +93,7 @@ view: location_group_dt {
       account_id,
       config,
       created_on,
-      group_id,
+      id,
       label,
       location_group_discriminator,
       location_group_key,

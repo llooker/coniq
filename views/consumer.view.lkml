@@ -47,7 +47,7 @@ view: consumer {
 
   dimension: age {
     type:  duration_year
-    sql_start: ${date_of_birth_year} ;;
+    sql_start: ${date_of_birth_date} ;;
     sql_end: current_timestamp() ;;
   }
 
