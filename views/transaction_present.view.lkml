@@ -141,6 +141,7 @@ view: transaction_present {
   }
 
   measure: total_price {
+    label: "total Spend"
     type: sum
     sql: ${price} ;;
     filters: [is_revenue: "Yes"]
