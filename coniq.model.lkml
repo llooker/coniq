@@ -19,6 +19,13 @@ include: "/**/*.view.lkml"                # include all views in the views/ fold
 #   }
 # }
 
+datagroup: coniq_pdt {
+  label: "Update Trigger"
+  description: "datagroup to refresh all pdts every day"
+  max_cache_age: "24 hours"
+  sql_trigger: date(now()) ;;
+}
+
 explore: transaction_present {
   view_label: "Transactions"
   sql_always_where: ${test} =0 and ${duplicate} = 0 and ${id_auth_group}=76733 ;;
@@ -58,15 +65,20 @@ explore: transaction_present {
     sql_on: ${transaction_present.visit_id}=${visit_facts_dt.visit_id} ;;
   }
 
-  join: customer_dt {
+  join: customer_activity_dt {
     view_label: "Customer"
     relationship: many_to_one
-    sql_on: ${transaction_present.id_consumer}=${customer_dt.id_consumer} ;;
+    sql_on: ${transaction_present.id_consumer}=${customer_activity_dt.id_consumer} ;;
     }
 
   join: oma_data{
     relationship: many_to_many
     sql_on: ${auth_location.external_id} = ${oma_data.external_id} and ${auth_location.account_id} = ${oma_data.account_id} and ${oma_data.sale_date_date} = ${transaction_present.date_redeemed_date} ;;
+  }
+
+  join: sector_activity_monthly {
+    relationship: many_to_one
+    sql_on: ${location_group_location.location_group_id} = ${sector_activity_monthly.location_group_id} and ${transaction_present.date_redeemed_month} = ${sector_activity_monthly.month_month} and ${transaction_present.date_redeemed_year} = ${sector_activity_monthly.month_year}  ;;
   }
 }
 

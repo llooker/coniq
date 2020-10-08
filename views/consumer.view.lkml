@@ -69,19 +69,6 @@ view: consumer {
     sql: ${TABLE}.gender ;;
   }
 
-  dimension: age_bins {
-    type: string
-    sql: if(diff_years(${consumer.date_of_birth_year}, now())<=18,"<=18",(if
-(diff_years(${consumer.date_of_birth_year}, now())<25,"<25",if(
-diff_years(${consumer.date_of_birth_year}, now())<35,"<35",if(
-diff_years(${consumer.date_of_birth_year}, now())<45,"<45",if(
-diff_years(${consumer.date_of_birth_year}, now())<55,"<55",if(
-diff_years(${consumer.date_of_birth_year}, now())<65,"<65",if(
-diff_years(${consumer.date_of_birth_year}, now())<75,"<75",if(
-diff_years(${consumer.date_of_birth_year}, now())>74,">=75","unspecified")))))))))
- ;;
-  }
-
   dimension: id_auth_group {
     type: number
     sql: ${TABLE}.id_auth_group ;;
