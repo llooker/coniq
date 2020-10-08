@@ -3,17 +3,14 @@ view: customer_activity_dt {
     datagroup_trigger: coniq_pdt
     sql: SELECT
         transaction_present.id_consumer  AS id_consumer,
-        COUNT(DISTINCT CASE WHEN transaction_present.id_consumer>0 and transaction_present.id_consumer<>56796119  THEN (case when (transaction_present.id_consumer>0 and transaction_present.id_consumer<>56796119) is true then concat(transaction_present.id_consumer,(DATE(FROM_UNIXTIME(transaction_present.date_redeemed )))) else null end)  ELSE NULL END) AS `transaction_present.total_visits`,
+        COUNT(DISTINCT concat(transaction_present.id_consumer,(DATE(FROM_UNIXTIME(transaction_present.date_redeemed ))))) AS `transaction_present.total_visits`,
         COALESCE(SUM(CASE WHEN transaction_present.price>0  THEN transaction_present.price  ELSE NULL END), 0) AS `transaction_present.total_price`,
-        COUNT(CASE WHEN transaction_present.price>0  THEN 1 ELSE NULL END) AS `transaction_present.total_non_zero_transactions`,
-        COUNT(DISTINCT auth_location.id_auth_location ) AS `auth_location.count`
+        COUNT(CASE WHEN transaction_present.price>0  THEN 1 ELSE NULL END) AS `transaction_present.total_non_zero_transactions`
       FROM iris.TRANSACTION_present  AS transaction_present
-      LEFT JOIN iris.AUTH_location  AS auth_location ON transaction_present.id_auth_location=auth_location.id_auth_location
-
-      WHERE date_redeemed > unix_timestamp(date(now() - interval 20 day))   AND (transaction_present.test =0 and transaction_present.duplicate = 0) AND (NOT (transaction_present.id_auth_group  IS NULL))
+      WHERE date_redeemed > unix_timestamp(date(now() - interval 60 day))
+      AND (transaction_present.test =0 and transaction_present.duplicate = 0) AND (NOT (transaction_present.id_auth_group  IS NULL)) and id_consumer > 0 and id_consumer <> 56796119 and price > 0
       GROUP BY 1
-      ORDER BY COUNT(DISTINCT CASE WHEN transaction_present.id_consumer>0 and transaction_present.id_consumer<>56796119  THEN (case when (transaction_present.id_consumer>0 and transaction_present.id_consumer<>56796119) is true then concat(transaction_present.id_consumer,(DATE(FROM_UNIXTIME(transaction_present.date_redeemed )))) else null end)  ELSE NULL END) DESC
-       ;;
+             ;;
       indexes: ["id_consumer"]
   }
 

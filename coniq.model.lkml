@@ -75,6 +75,11 @@ explore: transaction_present {
     relationship: many_to_many
     sql_on: ${auth_location.external_id} = ${oma_data.external_id} and ${auth_location.account_id} = ${oma_data.account_id} and ${oma_data.sale_date_date} = ${transaction_present.date_redeemed_date} ;;
   }
+
+  join: sector_activity_monthly {
+    relationship: many_to_one
+    sql_on: ${location_group_location.location_group_id} = ${sector_activity_monthly.location_group_id} and ${transaction_present.date_redeemed_month} = ${sector_activity_monthly.month_month} and ${transaction_present.date_redeemed_year} = ${sector_activity_monthly.month_year}  ;;
+  }
 }
 
 explore: oma_data {

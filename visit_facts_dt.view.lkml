@@ -10,7 +10,7 @@ view: visit_facts_dt {
         COALESCE(SUM(CASE WHEN transaction_present.price>0  THEN transaction_present.price  ELSE NULL END), 0) AS `transaction_present.total_price`
       FROM iris.TRANSACTION_present  AS transaction_present
 
-      WHERE date_redeemed > unix_timestamp(date(now() - interval 60 day))  and test = 0 and duplicate = 0 and transaction_present.id_consumer>0 and transaction_present.id_consumer<>56796119
+      WHERE date_redeemed > unix_timestamp(date(now() - interval 100 day))  and test = 0 and duplicate = 0 and transaction_present.id_consumer>0 and transaction_present.id_consumer<>56796119
       GROUP BY 1,2,3
        ;;
     indexes: ["visit_id"]
