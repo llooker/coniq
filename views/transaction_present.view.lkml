@@ -27,6 +27,7 @@ view: transaction_present {
       year
     ]
     sql: ${TABLE}.current_status_on ;;
+
   }
 
 
@@ -58,9 +59,11 @@ view: transaction_present {
       year
     ]
     sql: ${TABLE}.date_redeemed ;;
-    datatype:  epoch
+    datatype: epoch
 
   }
+
+
 
 
 
@@ -144,8 +147,14 @@ view: transaction_present {
     label: "total Spend"
     type: sum
     sql: ${price} ;;
+    value_format: "#,##0"
     filters: [is_revenue: "Yes"]
+
+    html: {{ location_setting.currency._value }}{{rendered_value}} ;;
   }
+
+
+
 
   measure: count {
     label: "Transaction count"
