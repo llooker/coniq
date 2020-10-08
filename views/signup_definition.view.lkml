@@ -33,7 +33,6 @@ view: signup_definition {
     sql: ${TABLE}.name ;;
   }
 
-
   dimension_group: updated {
     type: time
     timeframes: [
