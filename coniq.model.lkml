@@ -28,8 +28,8 @@ datagroup: coniq_pdt {
 
 explore: transaction_present {
   view_label: "Transactions"
-  sql_always_where: ${test} =0 and ${duplicate} = 0 ;;
-  always_filter: {filters: [transaction_present.date_redeemed_date:"365 days"]}
+  sql_always_where: ${test} =0 and ${duplicate} = 0  ;;
+  always_filter: {filters::[transaction_present.id_auth_group: "76733",transaction_present.date_recorded_year: "2020",consumer.customer_discriminator: "active"]}
   access_filter: {field:transaction_present.id_auth_group
     user_attribute:account}
 
@@ -100,6 +100,7 @@ explore: oma_data {
 explore: consumer {
   view_label: "Customers"
   sql_always_where: ${customer_discriminator}='active' ;;
+  always_filter: {filters:[consumer.id_auth_group: "76733",consumer.created_on_year: "2020"]}
   access_filter: {field:consumer.id_auth_group
     user_attribute:account}
 

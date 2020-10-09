@@ -5,6 +5,8 @@ view: customer_activity_dt {
         transaction_present.id_consumer  AS id_consumer,
         COUNT(DISTINCT concat(transaction_present.id_consumer,(DATE(FROM_UNIXTIME(transaction_present.date_redeemed ))))) AS `transaction_present.total_visits`,
         COALESCE(SUM(CASE WHEN transaction_present.price>0  THEN transaction_present.price  ELSE NULL END), 0) AS `transaction_present.total_price`,
+         min(from_unixtime(transaction_present.date_redeemed)) as First_transaction,
+        max(from_unixtime(transaction_present.date_redeemed)) as last_transaction,
         COUNT(CASE WHEN transaction_present.price>0  THEN 1 ELSE NULL END) AS `transaction_present.total_non_zero_transactions`
       FROM iris.TRANSACTION_present  AS transaction_present
       WHERE date_redeemed > unix_timestamp(date(now() - interval 60 day))
@@ -25,6 +27,32 @@ view: customer_activity_dt {
   dimension: lifetime_visits {
     type: number
     sql: ${TABLE}.`transaction_present.total_visits` ;;
+  }
+
+  dimension_group: first_transaction {
+   type:time
+  timeframes: [ raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+]
+  sql: ${TABLE}.first_transaction;;
+  datatype: epoch
+  }
+
+  dimension_group: last_transaction {
+    type:time
+    timeframes: [ raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql: ${TABLE}.last_transaction;;
+    datatype: epoch
   }
 
   dimension: lifetime_spend {
