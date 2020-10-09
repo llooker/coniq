@@ -6,7 +6,7 @@ view: sector_activity_monthly {
   location_group.label as sector_label,
   date_format(from_unixtime(transaction_present.date_redeemed), '%Y-%m-01')  AS `month_starting`,
   count(id_transaction_present) as all_transactions,
-  sum(price) as price,
+  sum(price) as price
   count(distinct id_consumer) as visitors
   FROM iris.TRANSACTION_present  AS transaction_present
 LEFT JOIN iris.location_group_location  AS location_group_location ON transaction_present.id_auth_location=location_group_location.id_auth_location
