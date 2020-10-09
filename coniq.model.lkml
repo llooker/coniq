@@ -27,9 +27,10 @@ datagroup: coniq_pdt {
 }
 
 explore: transaction_present {
+  from: transaction_extend
   view_label: "Transactions"
-  sql_always_where: ${test} =0 and ${duplicate} = 0  ;;
-  always_filter: {filters::[transaction_present.id_auth_group: "76733",transaction_present.date_recorded_year: "2020",consumer.customer_discriminator: "active"]}
+  always_filter: {filters: [transaction_present.date_redeemed_date:"60 days"]}
+  sql_always_where: ${test} =0 and ${duplicate} = 0 ;;
   access_filter: {field:transaction_present.id_auth_group
     user_attribute:account}
 
@@ -47,16 +48,22 @@ explore: transaction_present {
 
   }
 
-  join: location_group_location {
-    view_label: "Location to location_group"
-    relationship: many_to_many
-    sql_on: ${transaction_present.id_auth_location}=${location_group_location.id_auth_location} ;;
-  }
+  # join: location_group_location {
+  #   view_label: "Location to location_group"
+  #   relationship: many_to_many
+  #   sql_on: ${transaction_present.id_auth_location}=${location_group_location.id_auth_location} ;;
+  # }
 
-  join: location_group {
+  # join: location_group {
+  #   view_label: "Location Group"
+  #   relationship: many_to_many
+  #   sql_on: ${location_group_location.location_group_id}=${location_group.id} and ${location_group.type}='user';;
+  # }
+
+  join: location_group_dt {
     view_label: "Location Group"
-    relationship: many_to_many
-    sql_on: ${location_group_location.location_group_id}=${location_group.id} and ${location_group.type}='user';;
+    relationship: many_to_one
+    sql_on:  ${transaction_present.id_auth_location}=${location_group_dt.id_auth_location};;
   }
 
   join: visit_facts_dt {
@@ -76,9 +83,15 @@ explore: transaction_present {
     sql_on: ${auth_location.external_id} = ${oma_data.external_id} and ${auth_location.account_id} = ${oma_data.account_id} and ${oma_data.sale_date_date} = ${transaction_present.date_redeemed_date} ;;
   }
 
+
+  join: location_setting {
+    relationship: many_to_one
+    sql_on: ${location_group_dt.account_id}=${location_setting.account_id} ;;
+    }
   join: sector_activity_monthly {
     relationship: many_to_one
-    sql_on: ${location_group_location.location_group_id} = ${sector_activity_monthly.location_group_id} and ${transaction_present.date_redeemed_month} = ${sector_activity_monthly.month_month} and ${transaction_present.date_redeemed_year} = ${sector_activity_monthly.month_year}  ;;
+    sql_on: ${location_group_dt.id} = ${sector_activity_monthly.location_group_id} and ${transaction_present.date_redeemed_month} = ${sector_activity_monthly.month_month} and ${transaction_present.date_redeemed_year} = ${sector_activity_monthly.month_year}  ;;
+
   }
 }
 
@@ -89,6 +102,13 @@ explore: oma_data {
     relationship: many_to_one
     sql_on: ${auth_location.external_id} = ${oma_data.external_id} and ${auth_location.account_id} = ${oma_data.account_id} ;;
   }
+
+  join: auth_group {
+    view_label: "Accounts"
+    relationship: many_to_one
+    sql_on: ${transaction_present.id_auth_group}=${auth_group.id_auth_group} ;;
+  }
+
   join: transaction_present {
     view_label: "Coniq transactions"
     relationship: many_to_many
