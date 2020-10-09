@@ -1,6 +1,6 @@
 view: location_group_dt {
   derived_table: {
-    sql_trigger_value: date(now() ;;
+    datagroup_trigger: coniq_pdt
     sql: SELECT
         location_group.account_id  AS `account_id`,
         location_group.config  AS `config`,
