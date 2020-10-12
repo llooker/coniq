@@ -121,6 +121,7 @@ explore: oma_data {
 explore: consumer {
   view_label: "Customers"
   sql_always_where: ${customer_discriminator}='active' ;;
+  always_filter: {filters:[consumer.created_on_date:"60 days"]}
   access_filter: {field:consumer.id_auth_group
     user_attribute:account}
 
@@ -128,6 +129,12 @@ explore: consumer {
     view_label: "Accounts"
     relationship: many_to_one
     sql_on: ${consumer.id_auth_group} = ${auth_group.id_auth_group} ;;
+  }
+
+  join: transaction_present {
+    view_label: "transactions"
+    relationship: many_to_one
+    sql_on: ${consumer.id_consumer} = ${transaction_present.id_consumer} ;;
   }
 
   join: signup {
@@ -150,11 +157,13 @@ explore: consumer {
   }
   join: customer_activity_dt
   {view_label:"customer_activity"
-    relationship: one_to_one
-    sql_on: ${consumer.id_consumer}=${customer_activity_dt.id_consumer};;
+    relationship: many_to_one
+    sql_on: ${consumer.id_consumer}=${customer_activity_dt.id_consumer} ;;
     }
 
 }
+
+explore: customer_activity_dt {}
 
 explore: visit_facts_dt {
   view_label: "Visits"
@@ -173,4 +182,30 @@ explore: visit_facts_dt {
     sql_on: ${visit_facts_dt.customer_id} = ${consumer.id_consumer} ;;
   }
 
+}
+
+
+
+# AGG AWARENESS:
+
+explore: +transaction_present {
+  aggregate_table: rollup__auth_location_name__channel__date_redeemed_date__location_group_dt_label {
+    query: {
+      dimensions: [
+        transaction_present.id_auth_group,
+        auth_location.name,
+        channel,
+        date_redeemed_date,
+        location_group_dt.label
+      ]
+      measures: [average_Transaction_value, count, count_distinct_customers, total_customers, total_non_zero_transactions, total_price, total_visits, transaction_ratio]
+      filters: [
+        transaction_present.date_redeemed_date: "60 days"
+      ]
+    }
+
+    materialization: {
+      persist_for: "24 hours"
+    }
+  }
 }

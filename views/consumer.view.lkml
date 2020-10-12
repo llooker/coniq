@@ -66,7 +66,7 @@ view: consumer {
 
   dimension: gender {
     type: string
-    sql: ${TABLE}.gender ;;
+    sql: ${TABLE}.gender;;
   }
 
   dimension: id_auth_group {
