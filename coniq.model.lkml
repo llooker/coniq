@@ -42,7 +42,7 @@ explore: transaction_present {
 
 
   join: auth_location {
-    view_label: "Locations"
+    view_label: "Brand"
     relationship: many_to_one
     sql_on: ${transaction_present.id_auth_location}=${auth_location.id_auth_location} ;;
 
@@ -61,7 +61,7 @@ explore: transaction_present {
   # }
 
   join: location_group_dt {
-    view_label: "Location Group"
+    view_label: "Shopping Centre"
     relationship: many_to_one
     sql_on:  ${transaction_present.id_auth_location}=${location_group_dt.id_auth_location};;
   }
@@ -73,7 +73,7 @@ explore: transaction_present {
   }
 
   join: consumer {
-    view_label: "Customer "
+    view_label: "Customer"
     relationship: many_to_one
     sql_on: ${transaction_present.id_consumer}=${consumer.id_consumer} ;;
     }
@@ -85,6 +85,7 @@ explore: transaction_present {
 
 
   join: location_setting {
+    view_label: "Transactions"
     relationship: many_to_one
     sql_on: ${location_group_dt.account_id}=${location_setting.account_id} ;;
     }
