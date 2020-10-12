@@ -173,3 +173,29 @@ explore: visit_facts_dt {
   }
 
 }
+
+
+
+# AGG AWARENESS:
+
+explore: +transaction_present {
+  aggregate_table: rollup__auth_location_name__channel__date_redeemed_date__location_group_dt_label {
+    query: {
+      dimensions: [
+        transaction_present.id_auth_group,
+        auth_location.name,
+        channel,
+        date_redeemed_date,
+        location_group_dt.label
+      ]
+      measures: [average_Transaction_value, count, count_distinct_customers, total_customers, total_non_zero_transactions, total_price, total_visits, transaction_ratio]
+      filters: [
+        transaction_present.date_redeemed_date: "60 days"
+      ]
+    }
+
+    materialization: {
+      persist_for: "24 hours"
+    }
+  }
+}

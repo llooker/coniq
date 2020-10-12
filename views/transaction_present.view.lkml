@@ -182,8 +182,8 @@ view: transaction_present {
   measure: total_visits {
     type: count_distinct
     sql: ${visit_id} ;;
-    drill_fields: [is_known_customer,id_auth_location,price,auth_location.name,location_group.name]
-    filters: [is_known_customer: "Yes"]
+    # drill_fields: [is_known_customer,id_auth_location,price,auth_location.name,location_group.name]
+    # filters: [is_known_customer: "Yes"]
   }
 
   measure: total_customers {
