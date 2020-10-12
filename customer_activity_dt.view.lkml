@@ -54,12 +54,27 @@ view: customer_activity_dt {
     sql: ${TABLE}.last_transaction;;
     datatype: epoch
   }
+  measure: count {
+    type: count
+  }
 
   dimension: lifetime_spend {
     type: number
     sql: ${TABLE}.`transaction_present.total_price` ;;
   }
 
+  measure: spend {
+    type: sum_distinct
+    sql: ${TABLE}.`transaction_present.total_price` ;;
+  }
+  measure: visit {
+    type: sum_distinct
+    sql: ${TABLE}.`transaction_present.total_visits` ;;
+  }
+  measure: scans {
+    type: sum_distinct
+    sql: ${TABLE}.`transaction_present.total_non_zero_transactions` ;;
+  }
   dimension: lifetime_transactions {
     type: number
     sql: ${TABLE}.`transaction_present.total_non_zero_transactions` ;;
@@ -68,6 +83,36 @@ view: customer_activity_dt {
   dimension: lifetime_brands_visited {
     type: number
     sql: ${TABLE}.`auth_location.count` ;;
+  }
+
+  dimension: spend_bucket  {
+    case: {
+      when: {
+        sql: ${lifetime_spend}=0 ;;
+        label: "No spend"
+
+      }
+      when: {
+        sql: ${lifetime_spend}>0 and ${lifetime_spend}<250 ;;
+        label: "0-250"
+      }
+      when: {
+        sql: ${lifetime_spend}>=250 and ${lifetime_spend}<=500 ;;
+        label: "250 to 500"
+      }
+      when: {
+        sql: ${lifetime_spend}>=500 and ${lifetime_spend}<=750;;
+        label: "500 to 750"
+      }
+      when: {
+        sql: ${lifetime_spend}>=750 and ${lifetime_spend}<=1000 ;;
+        label: "750 to 1000"
+      }
+      when: {
+        sql:${lifetime_spend}>1000;;
+        label: "above 1000"
+      }
+    }
   }
 
     measure: avg_lifetime_visits {
@@ -92,9 +137,14 @@ view: customer_activity_dt {
       sql: ${lifetime_transactions} ;;
     }
 
-    measure: avg_lifetime_brands_visited {
-      type: average
-      sql: ${lifetime_brands_visited} ;;
+    measure: returning_customers  {
+      type: count_distinct
+      sql: ${id_consumer};;
+      filters: [lifetime_visits: ">1"]
     }
+
+
+
+
 
 }
