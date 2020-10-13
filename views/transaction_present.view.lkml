@@ -149,6 +149,13 @@ view: transaction_present {
     sql: ${price} ;;
     value_format: "#,##0"
     filters: [is_revenue: "Yes"]
+  }
+
+  measure: total_spend_currency {
+    type: sum
+    sql: ${price} ;;
+    value_format: "#,##0"
+    filters: [is_revenue: "Yes"]
 
     html: {{ location_setting.currency._value }}{{rendered_value}} ;;
   }
@@ -209,6 +216,15 @@ view: transaction_present {
     value_format_name: eur
     filters: [is_revenue: "Yes"]
   }
+
+  measure: average_Transaction_value_tooltip {
+    type:  average
+    sql: ${price} ;;
+    value_format_name: eur
+    filters: [is_revenue: "Yes"]
+    html: {{rendered_value}} || Total spend {{total_price._rendered_value}} ;;
+  }
+
 
   measure: count_distinct_customers {
     type: count_distinct
