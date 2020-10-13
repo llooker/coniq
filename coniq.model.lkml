@@ -94,6 +94,11 @@ explore: oma_data {
     relationship: many_to_many
     sql_on:${auth_location.id_auth_location} = ${transaction_present.id_auth_location} and ${oma_data.sale_date_date} = ${transaction_present.date_redeemed_date} ;;
   }
+  join: auth_group {
+    view_label: "Account"
+    relationship: many_to_one
+    sql_on: ${oma_data.account_id} = ${auth_group.id_auth_group} ;;
+  }
 
 }
 
@@ -152,4 +157,9 @@ explore: visit_facts_dt {
     sql_on: ${visit_facts_dt.customer_id} = ${consumer.id_consumer} ;;
   }
 
+  join: auth_group {
+    view_label: "Account"
+    relationship: many_to_one
+    sql_on: ${visit_facts_dt.account_id} = ${auth_group.id_auth_group} ;;
+  }
 }

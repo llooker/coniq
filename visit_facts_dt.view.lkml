@@ -13,7 +13,7 @@ view: visit_facts_dt {
       WHERE date_redeemed > unix_timestamp(date(now() - interval 100 day))  and test = 0 and duplicate = 0 and transaction_present.id_consumer>0 and transaction_present.id_consumer<>56796119
       GROUP BY 1,2,3
        ;;
-    indexes: ["visit_id"]
+    indexes: ["visit_id", "id_auth_group", "id_consumer"  ]
   }
 
   measure: count {
