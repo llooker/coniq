@@ -80,10 +80,10 @@ view: customer_activity_dt {
     sql: ${TABLE}.`transaction_present.total_non_zero_transactions` ;;
   }
 
-  dimension: lifetime_brands_visited {
-    type: number
-    sql: ${TABLE}.`auth_location.count` ;;
-  }
+  # dimension: lifetime_brands_visited {
+  #   type: number
+  #   sql: ${TABLE}.`auth_location.count` ;;
+  # }
 
   dimension: spend_bucket  {
     case: {

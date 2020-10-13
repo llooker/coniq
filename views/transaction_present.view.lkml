@@ -148,16 +148,21 @@ view: transaction_present {
     type: sum
     sql: ${price} ;;
     value_format: "#,##0"
+    drill_fields: [detail*]
     filters: [is_revenue: "Yes"]
   }
 
   measure: total_spend_currency {
+    label: "{% if _user_attributes['specific_label'] == 'Yes' %} Total Price currency
+    {% else %} Total Spend currency
+    {% endif %}"
     type: sum
     sql: ${price} ;;
     value_format: "#,##0"
     filters: [is_revenue: "Yes"]
-
+    drill_fields: [detail*]
     html: {{ location_setting.currency._value }}{{rendered_value}} ;;
+    required_access_grants: [can_view_measure]
   }
 
 
@@ -189,6 +194,7 @@ view: transaction_present {
   measure: total_visits {
     type: count_distinct
     sql: ${visit_id} ;;
+    drill_fields: [detail*]
     # drill_fields: [is_known_customer,id_auth_location,price,auth_location.name,location_group.name]
     # filters: [is_known_customer: "Yes"]
   }
@@ -196,6 +202,7 @@ view: transaction_present {
   measure: total_customers {
     type: count_distinct
     sql: ${id_consumer} ;;
+    drill_fields: [detail*]
     filters: [is_known_customer: "Yes"]
   }
 
@@ -214,6 +221,7 @@ view: transaction_present {
     type:  average
     sql: ${price} ;;
     value_format_name: eur
+    drill_fields: [detail*]
     filters: [is_revenue: "Yes"]
   }
 
@@ -222,6 +230,7 @@ view: transaction_present {
     sql: ${price} ;;
     value_format_name: eur
     filters: [is_revenue: "Yes"]
+    drill_fields: [detail*]
     html: {{rendered_value}} || Total spend {{total_price._rendered_value}} ;;
   }
 
@@ -230,5 +239,11 @@ view: transaction_present {
     type: count_distinct
     sql:${id_consumer} ;;
     filters: [is_known_customer: "Yes"]
+    drill_fields: [detail*]
   }
+
+  set: detail { fields: [date_redeemed_time,id_consumer,price,channel]
+
+  }
+
 }

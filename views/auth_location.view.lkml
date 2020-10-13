@@ -39,6 +39,11 @@ view: auth_location {
   dimension: name {
     type: string
     sql: ${TABLE}.name ;;
+    link: {
+      label: "{{value}} Analytics Dashboard"
+      url: "/dashboards/1?Brand={{ value | encode_uri }}"
+      icon_url: "http://www.looker.com/favicon.ico"
+    }
   }
 
 

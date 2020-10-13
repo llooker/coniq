@@ -49,6 +49,7 @@ view: location_group_dt {
   }
 
   dimension: label {
+    label: "Brand Category"
     type: string
     sql: ${TABLE}.label ;;
   }
