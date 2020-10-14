@@ -59,6 +59,13 @@ view: customer_activity_dt {
       tiers: [0,250,500,750,1000]
     }
 
+    dimension: transaction_bin {
+    type: tier
+    style: integer
+    sql: ${lifetime_transactions} ;;
+    tiers: [2,4,6,8,10,20]
+  }
+
     measure: avg_lifetime_transactions {
       type: average
       sql: ${lifetime_transactions} ;;
@@ -69,4 +76,7 @@ view: customer_activity_dt {
       sql: ${lifetime_brands_visited} ;;
     }
 
+    measure: count {
+    type: count
+  }
 }
