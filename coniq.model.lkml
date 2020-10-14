@@ -142,7 +142,7 @@ explore: consumer {
   }
 
   join: transaction_present {
-    view_label: "transactions"
+    view_label: "Transactions"
     relationship: many_to_one
     sql_on: ${consumer.id_consumer} = ${transaction_present.id_consumer} ;;
   }
