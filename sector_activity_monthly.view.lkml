@@ -6,12 +6,12 @@ view: sector_activity_monthly {
   location_group.label as sector_label,
   date_format(from_unixtime(transaction_present.date_redeemed), '%Y-%m-01')  AS `month_starting`,
   count(id_transaction_present) as all_transactions,
-  sum(price) as price
+  sum(price) as price,
   count(distinct id_consumer) as visitors
   FROM iris.TRANSACTION_present  AS transaction_present
 LEFT JOIN iris.location_group_location  AS location_group_location ON transaction_present.id_auth_location=location_group_location.id_auth_location
 LEFT JOIN iris.location_group  AS location_group ON location_group_location.location_group_id=location_group.id and location_group.type='user'
-WHERE (location_group.location_group_type_id  = 2)
+WHERE (location_group.location_group_type_id  = 2) and date_redeemed > unix_timestamp(date(now() - interval 60 day))
 AND (transaction_present.test =0 and transaction_present.duplicate = 0 ) AND (NOT (transaction_present.id_auth_group  IS NULL)) and price>0
 GROUP BY 1,2,3 ;;
   indexes: ["sector_id"]
@@ -41,6 +41,13 @@ GROUP BY 1,2,3 ;;
     datatype: date
   }
 
+  dimension: primary_key {
+    hidden: yes
+    primary_key: yes
+    type: string
+    sql: concat(${location_group_id},${location_group_name},${month_raw}) ;;
+  }
+
   dimension: price {
     type: number
     sql: ${TABLE}.price ;;
@@ -58,13 +65,13 @@ GROUP BY 1,2,3 ;;
 
   dimension: atv {
     type: number
-    sql: ${TABLE}.price / ${TABLE}.all_transactions  ;;
+    sql: ${price} / ${all_transactions}  ;;
     value_format_name:  decimal_2
   }
 
   dimension: spc {
     type: number
-    sql: ${TABLE}.price / ${TABLE}.visitors  ;;
+    sql: ${price} / ${visitors}  ;;
     value_format_name:  decimal_2
   }
 
