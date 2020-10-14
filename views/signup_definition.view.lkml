@@ -33,6 +33,12 @@ view: signup_definition {
     sql: ${TABLE}.name ;;
   }
 
+  dimension: signup_channel {
+    type: string
+    sql: case when ${name} like '%ebsite%' then'Webiste'
+    when ${name} like '%App%' then'App' else 'Scanner' end ;;
+  }
+
   dimension_group: updated {
     type: time
     timeframes: [
