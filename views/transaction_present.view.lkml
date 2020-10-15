@@ -152,6 +152,34 @@ view: transaction_present {
     filters: [is_revenue: "Yes"]
   }
 
+  dimension: is_this_week {
+    type: yesno
+    sql: ((( transaction_present.date_redeemed  ) >= (UNIX_TIMESTAMP(TIMESTAMP('2020-09-14')))
+    AND ( transaction_present.date_redeemed  ) < (UNIX_TIMESTAMP(TIMESTAMP('2020-09-21'))))) ;;
+  }
+
+  dimension: is_previous_week {
+    type: yesno
+    sql: ((( transaction_present.date_redeemed  ) >= (UNIX_TIMESTAMP(TIMESTAMP('2020-09-21')))
+    AND ( transaction_present.date_redeemed  ) < (UNIX_TIMESTAMP(TIMESTAMP('2020-09-27'))))) ;;
+  }
+
+  measure: total_spend_this_week {
+    type: sum
+    sql: ${price} ;;
+    value_format: "#,##0"
+    drill_fields: [detail*]
+    filters: [is_this_week: "Yes"]
+  }
+
+  measure: total_spend_previous_week {
+    type: sum
+    sql: ${price} ;;
+    value_format: "#,##0"
+    drill_fields: [detail*]
+    filters: [is_previous_week: "Yes"]
+  }
+
   measure: total_spend_currency {
     label: "{% if _user_attributes['specific_label'] == 'Yes' %} Total Price currency
     {% else %} Total Spend currency
