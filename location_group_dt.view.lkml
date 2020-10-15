@@ -20,7 +20,7 @@ view: location_group_dt {
       GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12
       ORDER BY location_group.account_id
        ;;
-    indexes: ["id_auth_location","account_id"]
+    indexes: ["id_auth_location","account_id","label"]
   }
 
   measure: count {
@@ -71,9 +71,9 @@ view: location_group_dt {
 
   dimension: type_name {
     type: string
-    sql: case when ${location_group_type_id}=1 then 'Members'
-    when ${location_group_type_id}=2 then 'Shoppers'
-    when ${location_group_type_id}=3 then 'Scans' else '' end;;
+    sql: case when ${location_group_type_id}=1 then 'General'
+    when ${location_group_type_id}=2 then 'Brand Sector'
+    when ${location_group_type_id}=3 then 'Shopping Centre' else '' end;;
   }
 
   dimension: points_event_rule_id {
