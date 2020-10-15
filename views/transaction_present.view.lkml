@@ -75,7 +75,6 @@ view: transaction_present {
     sql: convert_tz(${date_redeemed_raw},'UTC',${auth_group.timezone});;
   }
 
-
   dimension: duplicate {
     type: string
     sql: ${TABLE}.duplicate ;;
@@ -156,8 +155,14 @@ view: transaction_present {
     label: "total Spend"
     type: sum
     sql: ${price} ;;
+    value_format: "#,##0"
     filters: [is_revenue: "Yes"]
+
+    html: {{ location_setting.currency._value }}{{rendered_value}} ;;
   }
+
+
+
 
   measure: count {
     label: "Transaction count"
@@ -185,8 +190,8 @@ view: transaction_present {
   measure: total_visits {
     type: count_distinct
     sql: ${visit_id} ;;
-    drill_fields: [is_known_customer,id_auth_location,price,auth_location.name,location_group.name]
-    filters: [is_known_customer: "Yes"]
+    # drill_fields: [is_known_customer,id_auth_location,price,auth_location.name,location_group.name]
+    # filters: [is_known_customer: "Yes"]
   }
 
   measure: total_customers {

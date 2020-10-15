@@ -27,9 +27,11 @@ datagroup: coniq_pdt {
 }
 
 explore: transaction_present {
+  from: transaction_extend
   view_label: "Transactions"
+  always_filter: {filters: [transaction_present.date_redeemed_local_date: "60 days"]}
   sql_always_where: ${test} =0 and ${duplicate} = 0 ;;
-  always_filter: {filters: [transaction_present.date_redeemed_date:"365 days"]}
+
   access_filter: {field:transaction_present.id_auth_group
     user_attribute:account}
 
@@ -41,22 +43,28 @@ explore: transaction_present {
 
 
   join: auth_location {
-    view_label: "Locations"
+    view_label: "Brand"
     relationship: many_to_one
     sql_on: ${transaction_present.id_auth_location}=${auth_location.id_auth_location} ;;
 
   }
 
-  join: location_group_location {
-    view_label: "Location to location_group"
-    relationship: many_to_many
-    sql_on: ${transaction_present.id_auth_location}=${location_group_location.id_auth_location} ;;
-  }
+  # join: location_group_location {
+  #   view_label: "Location to location_group"
+  #   relationship: many_to_many
+  #   sql_on: ${transaction_present.id_auth_location}=${location_group_location.id_auth_location} ;;
+  # }
 
-  join: location_group {
-    view_label: "Location Group"
-    relationship: many_to_many
-    sql_on: ${location_group_location.location_group_id}=${location_group.id} and ${location_group.type}='user';;
+  # join: location_group {
+  #   view_label: "Location Group"
+  #   relationship: many_to_many
+  #   sql_on: ${location_group_location.location_group_id}=${location_group.id} and ${location_group.type}='user';;
+  # }
+
+  join: location_group_dt {
+    view_label: "Shopping Centre"
+    relationship: many_to_one
+    sql_on:  ${transaction_present.id_auth_location}=${location_group_dt.id_auth_location};;
   }
 
   join: visit_facts_dt {
@@ -66,7 +74,7 @@ explore: transaction_present {
   }
 
   join: consumer {
-    view_label: "Customer "
+    view_label: "Customer"
     relationship: many_to_one
     sql_on: ${transaction_present.id_consumer}=${consumer.id_consumer} ;;
     }
@@ -76,9 +84,16 @@ explore: transaction_present {
     sql_on: ${auth_location.external_id} = ${oma_data.external_id} and ${auth_location.account_id} = ${oma_data.account_id} and ${oma_data.sale_date_date} = ${transaction_present.date_redeemed_date} ;;
   }
 
+
+  join: location_setting {
+    view_label: "Transactions"
+    relationship: many_to_one
+    sql_on: ${location_group_dt.account_id}=${location_setting.account_id} ;;
+    }
   join: sector_activity_monthly {
     relationship: many_to_one
-    sql_on: ${location_group_location.location_group_id} = ${sector_activity_monthly.location_group_id} and ${transaction_present.date_redeemed_month} = ${sector_activity_monthly.month_month} and ${transaction_present.date_redeemed_year} = ${sector_activity_monthly.month_year}  ;;
+    sql_on: ${location_group_dt.id} = ${sector_activity_monthly.location_group_id} and ${transaction_present.date_redeemed_month} = ${sector_activity_monthly.month_month} and ${transaction_present.date_redeemed_year} = ${sector_activity_monthly.month_year}  ;;
+
   }
 }
 
@@ -89,6 +104,7 @@ explore: oma_data {
     relationship: many_to_one
     sql_on: ${auth_location.external_id} = ${oma_data.external_id} and ${auth_location.account_id} = ${oma_data.account_id} ;;
   }
+
   join: transaction_present {
     view_label: "Coniq transactions"
     relationship: many_to_many
@@ -105,6 +121,7 @@ explore: oma_data {
 explore: consumer {
   view_label: "Customers"
   sql_always_where: ${customer_discriminator}='active' ;;
+  always_filter: {filters:[consumer.created_on_date:"60 days"]}
   access_filter: {field:consumer.id_auth_group
     user_attribute:account}
 
@@ -112,6 +129,12 @@ explore: consumer {
     view_label: "Accounts"
     relationship: many_to_one
     sql_on: ${consumer.id_auth_group} = ${auth_group.id_auth_group} ;;
+  }
+
+  join: transaction_present {
+    view_label: "transactions"
+    relationship: many_to_one
+    sql_on: ${consumer.id_consumer} = ${transaction_present.id_consumer} ;;
   }
 
   join: signup {
@@ -134,11 +157,13 @@ explore: consumer {
   }
   join: customer_activity_dt
   {view_label:"customer_activity"
-    relationship: one_to_one
-    sql_on: ${consumer.id_consumer}=${customer_activity_dt.id_consumer};;
+    relationship: many_to_one
+    sql_on: ${consumer.id_consumer}=${customer_activity_dt.id_consumer} ;;
     }
 
 }
+
+explore: customer_activity_dt {}
 
 explore: visit_facts_dt {
   view_label: "Visits"
@@ -161,5 +186,31 @@ explore: visit_facts_dt {
     view_label: "Account"
     relationship: many_to_one
     sql_on: ${visit_facts_dt.account_id} = ${auth_group.id_auth_group} ;;
+  }
+}
+
+
+
+# AGG AWARENESS:
+
+explore: +transaction_present {
+  aggregate_table: rollup__auth_location_name__channel__date_redeemed_date__location_group_dt_label {
+    query: {
+      dimensions: [
+        transaction_present.id_auth_group,
+        auth_location.name,
+        channel,
+        date_redeemed_date,
+        location_group_dt.label
+      ]
+      measures: [average_Transaction_value, count, count_distinct_customers, total_customers, total_non_zero_transactions, total_price, total_visits, transaction_ratio]
+      filters: [
+        transaction_present.date_redeemed_date: "60 days"
+      ]
+    }
+
+    materialization: {
+      persist_for: "24 hours"
+    }
   }
 }
