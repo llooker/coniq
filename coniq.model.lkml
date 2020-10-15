@@ -19,6 +19,16 @@ include: "/**/*.view.lkml"                # include all views in the views/ fold
 #   }
 # }
 
+access_grant: can_view_measure {
+  user_attribute: can_see_local_currency
+  allowed_values: ["Yes"]
+}
+
+access_grant: specific_label {
+  user_attribute: specific_label
+  allowed_values: ["Yes"]
+}
+
 datagroup: coniq_pdt {
   label: "Update Trigger"
   description: "datagroup to refresh all pdts every day"
@@ -132,7 +142,7 @@ explore: consumer {
   }
 
   join: transaction_present {
-    view_label: "transactions"
+    view_label: "Transactions"
     relationship: many_to_one
     sql_on: ${consumer.id_consumer} = ${transaction_present.id_consumer} ;;
   }
@@ -163,7 +173,6 @@ explore: consumer {
 
 }
 
-explore: customer_activity_dt {}
 
 explore: visit_facts_dt {
   view_label: "Visits"

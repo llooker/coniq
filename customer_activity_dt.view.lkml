@@ -80,10 +80,10 @@ view: customer_activity_dt {
     sql: ${TABLE}.`transaction_present.total_non_zero_transactions` ;;
   }
 
-  dimension: lifetime_brands_visited {
-    type: number
-    sql: ${TABLE}.`auth_location.count` ;;
-  }
+  # dimension: lifetime_brands_visited {
+  #   type: number
+  #   sql: ${TABLE}.`auth_location.count` ;;
+  # }
 
   dimension: spend_bucket  {
     case: {
@@ -132,6 +132,13 @@ view: customer_activity_dt {
       tiers: [0,250,500,750,1000]
     }
 
+    dimension: transaction_bin {
+    type: tier
+    style: integer
+    sql: ${lifetime_transactions} ;;
+    tiers: [2,4,6,8,10,20]
+  }
+
     measure: avg_lifetime_transactions {
       type: average
       sql: ${lifetime_transactions} ;;
@@ -142,9 +149,6 @@ view: customer_activity_dt {
       sql: ${id_consumer};;
       filters: [lifetime_visits: ">1"]
     }
-
-
-
 
 
 }
