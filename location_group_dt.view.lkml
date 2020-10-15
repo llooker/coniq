@@ -69,6 +69,13 @@ view: location_group_dt {
     sql: ${TABLE}.location_group_type_id ;;
   }
 
+  dimension: type_name {
+    type: string
+    sql: case when ${location_group_type_id}=1 then 'Members'
+    when ${location_group_type_id}=2 then 'Shoppers'
+    when ${location_group_type_id}=3 then 'Scans' else '' end;;
+  }
+
   dimension: points_event_rule_id {
     type: number
     sql: ${TABLE}.points_event_rule_id ;;
