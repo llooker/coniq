@@ -270,7 +270,7 @@ view: transaction_present {
     drill_fields: [detail*]
   }
 
-  set: detail { fields: [date_redeemed_time,id_consumer,price,channel]
+  set: detail { fields: [date_redeemed_time,id_consumer,price,channel,auth_location.name,location_group_dt.label,location_group_dt.type_name]
 
   }
 
