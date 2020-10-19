@@ -27,7 +27,6 @@ view: transaction_present {
       year
     ]
     sql: ${TABLE}.current_status_on ;;
-
   }
 
 
@@ -59,13 +58,22 @@ view: transaction_present {
       year
     ]
     sql: ${TABLE}.date_redeemed ;;
-    datatype: epoch
-
+    datatype:  epoch
   }
 
-
-
-
+  dimension_group: date_redeemed_tz {
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql: convert_tz(${date_redeemed_raw},'UTC',${auth_group.timezone});;
+  }
 
   dimension: duplicate {
     type: string

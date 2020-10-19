@@ -39,8 +39,9 @@ datagroup: coniq_pdt {
 explore: transaction_present {
   from: transaction_extend
   view_label: "Transactions"
-  always_filter: {filters: [transaction_present.date_redeemed_date:"60 days"]}
+  always_filter: {filters: [transaction_present.date_redeemed_local_date: "60 days"]}
   sql_always_where: ${test} =0 and ${duplicate} = 0 ;;
+
   access_filter: {field:transaction_present.id_auth_group
     user_attribute:account}
 
@@ -114,16 +115,15 @@ explore: oma_data {
     sql_on: ${auth_location.external_id} = ${oma_data.external_id} and ${auth_location.account_id} = ${oma_data.account_id} ;;
   }
 
-  join: auth_group {
-    view_label: "Accounts"
-    relationship: many_to_one
-    sql_on: ${transaction_present.id_auth_group}=${auth_group.id_auth_group} ;;
-  }
-
   join: transaction_present {
     view_label: "Coniq transactions"
     relationship: many_to_many
     sql_on:${auth_location.id_auth_location} = ${transaction_present.id_auth_location} and ${oma_data.sale_date_date} = ${transaction_present.date_redeemed_date} ;;
+  }
+  join: auth_group {
+    view_label: "Account"
+    relationship: many_to_one
+    sql_on: ${oma_data.account_id} = ${auth_group.id_auth_group} ;;
   }
 
 }
@@ -191,6 +191,11 @@ explore: visit_facts_dt {
     sql_on: ${visit_facts_dt.customer_id} = ${consumer.id_consumer} ;;
   }
 
+  join: auth_group {
+    view_label: "Account"
+    relationship: many_to_one
+    sql_on: ${visit_facts_dt.account_id} = ${auth_group.id_auth_group} ;;
+  }
 }
 
 
