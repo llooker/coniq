@@ -33,13 +33,13 @@ datagroup: coniq_pdt {
   label: "Update Trigger"
   description: "datagroup to refresh all pdts every day"
   max_cache_age: "24 hours"
-  sql_trigger: date(now()) ;;
+  sql_trigger: select date(now()) ;;
 }
 
 explore: transaction_present {
   from: transaction_extend
   view_label: "Transactions"
-  always_filter: {filters: [transaction_present.date_redeemed_local_date: "60 days"]}
+  always_filter: {filters: [transaction_present.date_redeemed_date: "60 days"]}
   sql_always_where: ${test} =0 and ${duplicate} = 0 ;;
 
   access_filter: {field:transaction_present.id_auth_group
